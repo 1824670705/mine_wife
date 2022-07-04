@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oa.domain.mapper.OaBillMapper">
+
+    <select id="queryReportBill" resultType="com.oa.application.life.entity.vo.OaBillReportResponseVo">
+        SELECT
+            `create_time` AS 'date_range',
+            GROUP_CONCAT(`pay_type_name`) AS 'category',
+	        GROUP_CONCAT(`local_full_name`) AS 'local',
+            SUM( CAST( `real_price` AS DECIMAL ( 10, 2 )) ) AS 'consumption_amount',
+            COUNT( `bill_id` ) AS 'consumption_volume'
+        FROM
+            `oa_bill`
+        WHERE
+            `logic_del` = 1
+        <if test="params.type == 0 and params.dateGranularity != 3">
+            <if test="params.dateGranularity == 0">
+                GROUP BY DAY(`create_time`)
+            </if>
+            <if test="params.dateGranularity == 1">
+                GROUP BY MONTH(`create_time`)
+            </if>
+            <if test="params.dateGranularity == 2">
+                GROUP BY YEAR(`create_time`)
+            </if>
+        </if>
+        <if test="params.type == 1">
+            GROUP BY `pay_type_id`
+        </if>
+        <if test="params.type == 2">
+            GROUP BY `bill_type_id`
+        </if>
+        <if test="params.type == 3">
+            GROUP BY `local_last_id`
+        </if>
+    </select>
+
+    <select id="getList" resultType="com.oa.application.life.entity.vo.OaBillVo">
+        SELECT
+            ob.bill_id,
+            ob.bill_goods_name,
+            ob.bill_desc,
+            ob.real_price,
+            ob.bill_shop,
+            ob.local_last_id,
+            oa.area_full_code,
+            oa.area_full_name,
+            ob.pay_type_id,
+            ob.pay_type_name,
+            ob.bill_type_id,
+            ob.bill_type_name,
+            ob.create_by,
+            ob.create_time
+        FROM
+	        oa_bill ob
+	        LEFT JOIN oa_area oa ON ob.local_last_id = oa.area_code
+	        <where>
+                and ob.logic_del = 1
+            </where>
+    </select>
+</mapper>

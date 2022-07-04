@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oa.domain.mapper.OaSupplierMapper">
+
+    <resultMap id="getListHasTags" type="com.oa.application.user.vo.OaSupplierDto">
+        <id column="supplier_id" property="supplierId"/>
+        <id column="supplier_name" property="supplierName"/>
+        <id column="supplier_mobile" property="supplierMobile"/>
+        <id column="supplier_remake" property="supplierRemake"/>
+        <id column="supplier_locale" property="supplierLocale"/>
+        <id column="create_time" property="createTime"/>
+        <id column="create_by" property="createBy"/>
+        <collection property="supplierTags" select="getTag" column="supplier_id">
+            <id column="menu_id" property="menuId" jdbcType="BIGINT"/>
+            <result column="menu_name" property="menuName" jdbcType="VARCHAR"/>
+            <result column="menu_create_time" property="createTime" javaType="java.util.Date"/>
+        </collection>
+    </resultMap>
+
+    <select id="getTag" resultType="com.oa.application.menu.entity.OaMenu">
+        SELECT
+            om.menu_id,
+            om.menu_name,
+            om.create_time AS 'menu_create_time'
+        FROM
+            oa_menu_relation omr
+            LEFT JOIN oa_menu om ON omr.menu_id = om.menu_id
+            WHERE #{supplier_id} = omr.out_id
+    </select>
+
+    <select id="getList" resultMap="getListHasTags">
+        SELECT
+            os.supplier_id,
+            os.supplier_name,
+            os.supplier_mobile,
+            os.supplier_remake,
+            os.supplier_locale,
+            os.create_time,
+            os.create_by
+        FROM
+            oa_supplier os
+        <where>
+            os.logic_del = 1
+        </where>
+        order by os.create_time desc
+    </select>
+</mapper>

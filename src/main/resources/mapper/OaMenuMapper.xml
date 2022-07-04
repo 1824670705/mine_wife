@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oa.domain.mapper.OaMenuMapper">
+
+    <delete id="delByParentIds">
+        update `oa_menu` set `logic_del` = 0 where `parent_menu_id` in
+        <foreach collection="arg0" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </delete>
+</mapper>

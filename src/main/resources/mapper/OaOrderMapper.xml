@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oa.domain.mapper.OaOrderMapper">
+
+    <resultMap id="order_details_vo" type="com.oa.application.order.entity.vo.OrderDetailsVo" autoMapping="true">
+        <id column="order_id" property="orderId"/>
+        <collection property="shops" javaType="java.util.List" ofType="com.oa.application.goods.vo.GoodsSaveVo" autoMapping="true">
+            <id column="goods_id" property="goodsId" />
+        </collection>
+    </resultMap>
+
+    <select id="getListByPage" resultType="com.oa.application.order.entity.vo.OrderResponseVo">
+        SELECT
+        oo.order_id,
+        oo.shop_name,
+        oo.ord_consumer_id,
+        oo.ord_consumer_name,
+        oo.ord_supplier,
+        oo.ord_price,
+        oo.shop_id,
+        oo.ord_express_no,
+        oo.express_id,
+        oo.ord_status,
+        oo.ord_remake,
+        oo.locale_id,
+        oo.create_time,
+        om.menu_name as 'express_name',
+        os.supplier_name,
+        oo.ord_profit,
+        oo.ord_cost
+        FROM
+        oa_order oo
+        LEFT JOIN oa_menu om ON om.menu_id = oo.express_id
+        LEFT JOIN oa_supplier os ON os.supplier_id = oo.ord_supplier
+        <where>
+            and oo.`logic_del` = 1
+        </where>
+        order by oo.create_time desc
+    </select>
+
+    <select id="getOneOrder" resultMap="order_details_vo">
+        SELECT
+            oo.order_id,
+            oo.shop_name,
+            oo.ord_consumer_name,
+            oo.ord_supplier,
+            oo.ord_price,
+            oo.ord_express_no,
+            oo.ord_status,
+            oo.ord_remake,
+            oo.express_id,
+            oo.create_time,
+            og.goods_id,
+            og.goods_name,
+            og.cost_price,
+            og.goods_desc,
+            og.goods_status
+        FROM
+            oa_order oo
+            LEFT JOIN oa_order_goods_relation oogr ON oo.order_id = oogr.order_id
+            LEFT JOIN oa_goods og ON og.goods_id = oogr.goods_id
+        WHERE
+            oo.`logic_del` = 1
+            AND oo.`order_id` = #{p1}
+    </select>
+
+    <select id="query" resultType="com.oa.application.order.entity.vo.OaOrderReportVo" parameterType="com.oa.application.order.entity.dto.OaOrderReportDto">
+        SELECT
+            SUM(cast(ord_price as DECIMAL)) as 'sale_total',
+            SUM(cast(ord_cost as DECIMAL)) as 'cost_total',
+            SUM(cast(ord_profit as DECIMAL)) as 'profit_total'
+        FROM
+            oa_order
+        <where>
+            and `logic_del` = 1
+        </where>
+    </select>
+</mapper>

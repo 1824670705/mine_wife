@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oa.domain.mapper.OaMenuRelationMapper">
+
+    <delete id="deleteBatchByOutId" parameterType="java.util.List">
+        update `oa_menu_relation` set `logic_del` = 0 where `out_id` in
+        <foreach collection="relIds" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+</mapper>

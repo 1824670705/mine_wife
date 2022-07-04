@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: oa-wife
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 132831qQ
+    url: jdbc:mysql://127.0.0.1:3000/oa?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+    hikari:
+      max-lifetime: 500000
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  redis:
+    host: 127.0.0.1
+    port: 3300
+  cache:
+    type: redis
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-field: logic_del
+      logic-delete-value: 0
+      logic-not-delete-value: 1
+  configuration:
+    map-underscore-to-camel-case: true
+    default-executor-type: reuse
+  mapper-locations: classpath*:/mapper/*.xml
+server:
+  port: 8000
+  tomcat:
+    basedir: /

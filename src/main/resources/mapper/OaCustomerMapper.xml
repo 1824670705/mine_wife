@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oa.domain.mapper.OaCustomerMapper">
+
+    <resultMap id="getListHasTags" type="com.oa.application.user.vo.OaCustomerDto">
+        <id column="cus_id" property="cusId" jdbcType="BIGINT"/>
+        <result column="cus_name" property="cusName" jdbcType="VARCHAR"/>
+        <result column="cus_gender" property="cusGender" jdbcType="INTEGER"/>
+        <result column="cus_mobile" property="cusMobile" jdbcType="VARCHAR"/>
+        <result column="whether_black" property="whetherBlack" jdbcType="INTEGER"/>
+        <result column="cus_location" property="cusLocation" jdbcType="VARCHAR"/>
+        <result column="remake" property="remake" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" javaType="java.util.Date"/>
+        <collection property="cusTag" column="cus_id" select="getTag">
+            <id column="menu_id" property="menuId" jdbcType="BIGINT"/>
+            <result column="menu_name" property="menuName" jdbcType="VARCHAR"/>
+            <result column="menu_create_time" property="createTime" javaType="java.util.Date"/>
+        </collection>
+    </resultMap>
+
+
+    <select id="getTag" resultType="com.oa.application.menu.entity.OaMenu">
+        select om.menu_id,
+            om.menu_name,
+            om.create_time AS 'menu_create_time' from oa_menu_relation omr LEFT JOIN oa_menu om ON omr.menu_id = om.menu_id
+            where omr.out_id = #{cus_id} and omr.logic_del = 1
+    </select>
+
+    <select id="getList" resultMap="getListHasTags">
+        SELECT
+            oc.cus_id,
+            oc.cus_name,
+            oc.cus_gender,
+            oc.cus_mobile,
+            oc.whether_black,
+            oc.cus_location,
+            oc.remake,
+            oc.create_time
+        FROM
+            oa_customer oc
+        <where>
+            oc.logic_del = 1
+        </where>
+        order by oc.create_time desc
+    </select>
+</mapper>
