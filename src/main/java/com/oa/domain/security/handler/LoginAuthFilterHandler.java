@@ -1,5 +1,7 @@
 package com.oa.domain.security.handler;
 
+import com.oa.application.user.entity.vo.OaUserLoginResponseVo;
+import com.oa.domain.security.token.TokenUtils;
 import com.oa.utils.other.ResponseUtils;
 import com.oa.utils.result.R;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +17,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 鉴权
@@ -35,8 +38,10 @@ public class LoginAuthFilterHandler extends BasicAuthenticationFilter {
             ResponseUtils.responseInfoByJson(response, R.error().code(401).message("未登录"));
         } else {
             // 解析 token
+            OaUserLoginResponseVo loginResponseVo = TokenUtils.parseToken(token);
             // 解析角色信息
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken("root", token, Collections.singleton(new SimpleGrantedAuthority("ROLE_ADMIN")));
+            List<SimpleGrantedAuthority> roleCollect = loginResponseVo.getRoles().stream().map(v -> new SimpleGrantedAuthority("ROLE_" + v.getRoleName())).collect(Collectors.toList());
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginResponseVo.getUsername(), token, roleCollect);
             if (!ObjectUtils.isEmpty(authenticationToken)) {
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
