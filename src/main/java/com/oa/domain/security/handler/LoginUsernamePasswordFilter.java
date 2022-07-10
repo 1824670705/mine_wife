@@ -2,7 +2,6 @@ package com.oa.domain.security.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.oa.domain.security.token.TokenUtils;
 import com.oa.utils.constans.RedisKeyConstant;
 import com.oa.utils.other.RequestUtils;
 import com.oa.utils.other.ResponseUtils;
@@ -43,7 +42,7 @@ public class LoginUsernamePasswordFilter extends UsernamePasswordAuthenticationF
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        if (MediaType.APPLICATION_JSON_VALUE.equals(request.getContentType())) {
+        if (MediaType.APPLICATION_JSON_VALUE.equals(request.getContentType()) || "application/json;charset=UTF-8".equals(request.getContentType())) {
             try {
                 ServletInputStream loginInfo = request.getInputStream();
                 String loginJson = StreamUtils.copyToString(loginInfo, StandardCharsets.UTF_8);
@@ -55,6 +54,8 @@ public class LoginUsernamePasswordFilter extends UsernamePasswordAuthenticationF
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else {
+            log.error("用户信息解析失败\t=>\t{}", request.getContentType());
         }
         return loginAuthenticationManager.authenticate(new UsernamePasswordAuthenticationToken("", "", new ArrayList<>()));
     }
@@ -63,11 +64,10 @@ public class LoginUsernamePasswordFilter extends UsernamePasswordAuthenticationF
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         LoginUserDetails principal = (LoginUserDetails) authResult.getPrincipal();
         log.info("认证成功，登陆信息\t=>\t{}", JSON.toJSONString(principal));
-        String token = TokenUtils.createToken(principal);
         HashOperations<String, Object, Object> opsForHash = oaRedisTemplate.opsForHash();
         // 写入 redis
         opsForHash.put(RedisKeyConstant.userLoginKey, RequestUtils.getIp(request) + ":" + principal.getUsername(), principal);
-        ResponseUtils.responseInfoByJson(response, R.success().message("认证成功").data(token));
+        ResponseUtils.responseInfoByJson(response, R.success().message("认证成功").data(principal.getToken()));
     }
 
     @Override

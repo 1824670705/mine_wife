@@ -2,6 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.oa.domain.mapper.OaUserMapper">
 
+    <resultMap id="oaUserLoginBase" type="com.oa.application.user.entity.vo.OaUserLoginResponseVo" autoMapping="true">
+        <id property="userId" column="user_id"/>
+        <collection property="roles" ofType="com.oa.application.user.entity.vo.OaRoleVo" column="role_id"
+                    autoMapping="true">
+            <id column="role_id" property="roleId" />
+        </collection>
+    </resultMap>
+
+    <select id="login" resultMap="oaUserLoginBase">
+        select
+            ou.`user_id`, ou.`user_name`, ou.`account`, ou.`password`, orole.`role_name`, orole.`role_id`
+        from
+            `oa_user` ou left join `oa_role_user_relation` orur on ou.`user_id` = orur.`user_id`
+            left join `oa_role` orole on orur.`role_id` = orole.`role_id`
+        where
+            (ou.`user_name` = #{p1} or ou.`mobile` = #{p1} or ou.`account` = #{p1})
+            and ou.`logic_del` = 1
+    </select>
+
     <select id="getList" resultType="com.oa.application.user.entity.bo.OaUser">
         select * from oa_user ou
         <where>

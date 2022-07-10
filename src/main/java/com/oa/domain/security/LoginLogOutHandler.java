@@ -1,6 +1,6 @@
 package com.oa.domain.security;
 
-import com.oa.domain.security.handler.LoginUserDetails;
+import com.oa.application.user.entity.vo.OaUserLoginResponseVo;
 import com.oa.domain.security.token.TokenUtils;
 import com.oa.utils.constans.RedisKeyConstant;
 import com.oa.utils.other.RequestUtils;
@@ -32,8 +32,9 @@ public class LoginLogOutHandler implements LogoutHandler {
         // 移除 Token 信息
         Optional.ofNullable(httpServletRequest.getHeader("token")).ifPresent(token -> {
             HashOperations<String, Object, Object> opsForHash = oaRedisTemplate.opsForHash();
-            LoginUserDetails userDetails = TokenUtils.parseToken(token);
-            opsForHash.delete(RedisKeyConstant.userLoginKey, RequestUtils.getIp(httpServletRequest) + ":" + userDetails.getUsername());
+            OaUserLoginResponseVo userDetails = TokenUtils.parseToken(token);
+            // 移除 redis 中的内容
+            Optional.ofNullable(userDetails).ifPresent(v -> opsForHash.delete(RedisKeyConstant.userLoginKey, RequestUtils.getIp(httpServletRequest) + ":" + v.getUsername()));
         });
         try {
             ResponseUtils.responseInfoByJson(httpServletResponse, R.success().message("退出登陆成功"));

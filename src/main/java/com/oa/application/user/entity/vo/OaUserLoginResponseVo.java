@@ -32,7 +32,12 @@ public class OaUserLoginResponseVo implements Serializable {
     private String token;
 
     /**
+     * 密码
+     */
+    private String password;
+
+    /**
      * 角色信息
      */
-    private List<OaRoleVo> password;
+    private List<OaRoleVo> roles;
 }

@@ -49,11 +49,6 @@ public class OaUser implements Serializable {
     private Long authorityId;
 
     /**
-     * 角色 Id
-     */
-    private Long roleId;
-
-    /**
      * 创建时间
      */
     @TableField(fill = FieldFill.INSERT)

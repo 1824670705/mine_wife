@@ -3,9 +3,8 @@ package com.oa.application.user.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.oa.application.user.entity.bo.OaUser;
-import com.oa.application.user.vo.OaUserLoginVo;
-import com.oa.application.user.vo.OaUserListVo;
 import com.oa.application.user.entity.vo.OaUserLoginResponseVo;
+import com.oa.application.user.vo.OaUserListVo;
 
 import java.util.List;
 
@@ -21,10 +20,10 @@ public interface OaUserService extends IService<OaUser> {
     /**
      * 用户登陆
      *
-     * @param oaUSerLoginVo 登陆校验信息
+     * @param username 用户名
      * @return token等信息
      */
-    OaUserLoginResponseVo login(OaUserLoginVo oaUSerLoginVo);
+    OaUserLoginResponseVo login(String username);
 
     /**
      * 添加新用户

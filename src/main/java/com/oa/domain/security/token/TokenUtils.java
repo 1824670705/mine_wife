@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.oa.domain.security.handler.LoginUserDetails;
+import com.oa.application.user.entity.vo.OaUserLoginResponseVo;
 
 import java.util.Calendar;
 
@@ -18,11 +18,11 @@ public class TokenUtils {
     /**
      * 创建新的 token
      */
-    public static String createToken(LoginUserDetails loginUserDetails) {
+    public static String createToken(OaUserLoginResponseVo userLoginResponseVo) {
         Calendar instance = Calendar.getInstance();
         instance.add(Calendar.SECOND, tokenExpireDate);
         return JWT.create()
-                .withClaim("loginInfo", JSONObject.parseObject(JSON.toJSONString(loginUserDetails)))
+                .withClaim("loginInfo", JSONObject.parseObject(JSON.toJSONString(userLoginResponseVo)))
                 .withExpiresAt(instance.getTime())
                 .sign(Algorithm.HMAC256(tokenSignKey.getBytes()));
     }
@@ -30,7 +30,7 @@ public class TokenUtils {
     /**
      * 解析 token
      */
-    public static LoginUserDetails parseToken(String token) {
+    public static OaUserLoginResponseVo parseToken(String token) {
         return null;
     }
 }

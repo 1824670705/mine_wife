@@ -6,9 +6,10 @@ import com.oa.application.other.service.IOaAreaService;
 import com.oa.application.user.entity.bo.OaUser;
 import com.oa.application.user.entity.vo.OaUserLoginResponseVo;
 import com.oa.application.user.service.OaUserService;
-import com.oa.application.user.vo.OaUserLoginVo;
 import com.oa.application.user.vo.OaUserListVo;
 import com.oa.domain.mapper.OaUserMapper;
+import com.oa.domain.security.token.TokenUtils;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -22,6 +23,8 @@ public class OaUserServiceImpl extends ServiceImpl<OaUserMapper, OaUser> impleme
 
     @Resource
     private IOaAreaService iOaAreaService;
+    @Resource
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public Page<OaUser> getList(OaUserListVo userListVo) {
@@ -34,13 +37,15 @@ public class OaUserServiceImpl extends ServiceImpl<OaUserMapper, OaUser> impleme
     /**
      * 登陆
      *
-     * @param oaUSerLoginVo 登陆校验信息
+     * @param username 用户名
      * @return 令牌信息
      */
     @Override
-    public OaUserLoginResponseVo login(OaUserLoginVo oaUSerLoginVo) {
-
-        return null;
+    public OaUserLoginResponseVo login(String username) {
+        OaUserLoginResponseVo userLoginBaseInfo = baseMapper.login(username);
+        String token = TokenUtils.createToken(userLoginBaseInfo);
+        userLoginBaseInfo.setToken(token);
+        return userLoginBaseInfo;
     }
 
     @Override
@@ -50,6 +55,8 @@ public class OaUserServiceImpl extends ServiceImpl<OaUserMapper, OaUser> impleme
             oaUser.setAvatar("[\"http://129.151.117.242:9000/oa-wife/2022/06/15/1655261196873_20170310223301qj0sqxi3mnr97558.jpg\"]");
         // 自动生成账户
         oaUser.setAccount("oa" + UUID.randomUUID().toString().replace("-", "").substring(0, 6));
+        // 密码加密
+        oaUser.setPassword(bCryptPasswordEncoder.encode(oaUser.getPassword()));
         return save(oaUser);
     }
 
