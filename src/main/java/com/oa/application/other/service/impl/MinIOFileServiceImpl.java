@@ -11,7 +11,7 @@ import java.util.Collections;
 /**
  * MinIO 文件上传系统
  */
-@Service("/minIoFileService")
+@Service("minIoFileService")
 public class MinIOFileServiceImpl implements FileService {
 
     @Resource

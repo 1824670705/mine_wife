@@ -69,6 +69,8 @@
         select
           file_id, file_origin_name, file_encryption, create_time, update_time, logic_del, file_url, file_type, owner_id, owner_name
         from oa.oa_file
+    </select>
+    
     <!--统计总行数-->
     <select id="count" resultType="java.lang.Long">
         select count(1)
