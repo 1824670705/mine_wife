@@ -3,6 +3,7 @@ package com.oa.application.user.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.oa.application.user.entity.bo.OaUser;
+import com.oa.application.user.entity.to.OaUserSaveTo;
 import com.oa.application.user.entity.vo.OaUserLoginResponseVo;
 import com.oa.application.user.vo.OaUserListVo;
 
@@ -28,9 +29,9 @@ public interface OaUserService extends IService<OaUser> {
     /**
      * 添加新用户
      *
-     * @param oaUser 用户信息
+     * @param oaUserSaveTo 用户信息
      */
-    Object registerUser(OaUser oaUser);
+    Object registerUser(OaUserSaveTo oaUserSaveTo);
 
     /**
      * 逻辑删除用户
