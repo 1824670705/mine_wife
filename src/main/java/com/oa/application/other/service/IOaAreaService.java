@@ -1,7 +1,7 @@
 package com.oa.application.other.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.oa.application.other.dto.OaAreaListDto;
+import com.oa.application.other.entity.dto.OaAreaListDto;
 import com.oa.application.other.entity.OaArea;
 
 import java.util.List;

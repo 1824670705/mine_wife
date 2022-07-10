@@ -1,4 +1,4 @@
-package com.oa.application.other.dto;
+package com.oa.application.other.entity.dto;
 
 import lombok.Data;
 

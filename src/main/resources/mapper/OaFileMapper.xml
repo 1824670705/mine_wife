@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oa.dao.OaFileDao">
+
+    <resultMap id="BaseResultMap" type="com.oa.application.other.entity.bo.OaFile">
+        <!--@Table oa_file-->
+        <result property="fileId" column="file_id" jdbcType="INTEGER"/>
+        <result property="fileOriginName" column="file_origin_name" jdbcType="VARCHAR"/>
+        <result property="fileEncryption" column="file_encryption" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="logicDel" column="logic_del" jdbcType="INTEGER"/>
+        <result property="fileUrl" column="file_url" jdbcType="VARCHAR"/>
+        <result property="fileType" column="file_type" jdbcType="VARCHAR"/>
+        <result property="ownerId" column="owner_id" jdbcType="INTEGER"/>
+        <result property="ownerName" column="owner_name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BaseResultMap">
+        select
+          file_id, file_origin_name, file_encryption, create_time, update_time, logic_del, file_url, file_type, owner_id, owner_name
+        from oa_file
+        where file_id = #{fileId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BaseResultMap">
+        select
+          file_id, file_origin_name, file_encryption, create_time, update_time, logic_del, file_url, file_type, owner_id, owner_name
+        from oa_file
+        <where>
+            <if test="fileId != null">
+                and file_id = #{fileId}
+            </if>
+            <if test="fileOriginName != null and fileOriginName != ''">
+                and file_origin_name = #{fileOriginName}
+            </if>
+            <if test="fileEncryption != null and fileEncryption != ''">
+                and file_encryption = #{fileEncryption}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and update_time = #{updateTime}
+            </if>
+            <if test="logicDel != null">
+                and logic_del = #{logicDel}
+            </if>
+            <if test="fileUrl != null and fileUrl != ''">
+                and file_url = #{fileUrl}
+            </if>
+            <if test="fileType != null and fileType != ''">
+                and file_type = #{fileType}
+            </if>
+            <if test="ownerId != null">
+                and owner_id = #{ownerId}
+            </if>
+            <if test="ownerName != null and ownerName != ''">
+                and owner_name = #{ownerName}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BaseResultMap">
+        select
+          file_id, file_origin_name, file_encryption, create_time, update_time, logic_del, file_url, file_type, owner_id, owner_name
+        from oa.oa_file
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from oa_file
+        <where>
+            <if test="fileId != null">
+                and file_id = #{fileId}
+            </if>
+            <if test="fileOriginName != null and fileOriginName != ''">
+                and file_origin_name = #{fileOriginName}
+            </if>
+            <if test="fileEncryption != null and fileEncryption != ''">
+                and file_encryption = #{fileEncryption}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and update_time = #{updateTime}
+            </if>
+            <if test="logicDel != null">
+                and logic_del = #{logicDel}
+            </if>
+            <if test="fileUrl != null and fileUrl != ''">
+                and file_url = #{fileUrl}
+            </if>
+            <if test="fileType != null and fileType != ''">
+                and file_type = #{fileType}
+            </if>
+            <if test="ownerId != null">
+                and owner_id = #{ownerId}
+            </if>
+            <if test="ownerName != null and ownerName != ''">
+                and owner_name = #{ownerName}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="fileId" useGeneratedKeys="true">
+        insert into oa_file(file_origin_name, file_encryption, create_time, update_time, logic_del, file_url, file_type, owner_id, owner_name)
+        values (#{fileOriginName}, #{fileEncryption}, #{createTime}, #{updateTime}, #{logicDel}, #{fileUrl}, #{fileType}, #{ownerId}, #{ownerName})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="fileId" useGeneratedKeys="true">
+        insert into oa_file(file_origin_name, file_encryption, create_time, update_time, logic_del, file_url, file_type, owner_id, owner_name)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.fileOriginName}, #{entity.fileEncryption}, #{entity.createTime}, #{entity.updateTime}, #{entity.logicDel}, #{entity.fileUrl}, #{entity.fileType}, #{entity.ownerId}, #{entity.ownerName})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="fileId" useGeneratedKeys="true">
+        insert into oa_file(file_origin_name, file_encryption, create_time, update_time, logic_del, file_url, file_type, owner_id, owner_name)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.fileOriginName}, #{entity.fileEncryption}, #{entity.createTime}, #{entity.updateTime}, #{entity.logicDel}, #{entity.fileUrl}, #{entity.fileType}, #{entity.ownerId}, #{entity.ownerName})
+        </foreach>
+        on duplicate key update
+        file_origin_name = values(file_origin_name),
+        file_encryption = values(file_encryption),
+        create_time = values(create_time),
+        update_time = values(update_time),
+        logic_del = values(logic_del),
+        file_url = values(file_url),
+        file_type = values(file_type),
+        owner_id = values(owner_id),
+        owner_name = values(owner_name)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update oa_file
+        <set>
+            <if test="fileOriginName != null and fileOriginName != ''">
+                file_origin_name = #{fileOriginName},
+            </if>
+            <if test="fileEncryption != null and fileEncryption != ''">
+                file_encryption = #{fileEncryption},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="logicDel != null">
+                logic_del = #{logicDel},
+            </if>
+            <if test="fileUrl != null and fileUrl != ''">
+                file_url = #{fileUrl},
+            </if>
+            <if test="fileType != null and fileType != ''">
+                file_type = #{fileType},
+            </if>
+            <if test="ownerId != null">
+                owner_id = #{ownerId},
+            </if>
+            <if test="ownerName != null and ownerName != ''">
+                owner_name = #{ownerName},
+            </if>
+        </set>
+        where file_id = #{fileId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from oa_file where file_id = #{fileId}
+    </delete>
+
+</mapper>
+

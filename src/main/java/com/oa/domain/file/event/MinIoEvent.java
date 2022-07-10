@@ -35,13 +35,11 @@ public class MinIoEvent {
             String obj = DateTimeFormatter.ofPattern("yyyy/MM/dd").format(LocalDate.now()) + "/" + originalFilename;
             InputStream inputStream = multipartFile.getInputStream();
             minioClient.putObject(
-                    PutObjectArgs.builder()
-                            .bucket(bucketName)
+                    PutObjectArgs.builder().bucket(bucketName)
                             .contentType(contentType)
                             .object(obj)
                             .stream(inputStream, inputStream.available(), -1)
-                            .build()
-            );
+                            .build());
             urlList.add("http://129.151.117.242:9000/oa-wife/" + obj);
         }
         return urlList;

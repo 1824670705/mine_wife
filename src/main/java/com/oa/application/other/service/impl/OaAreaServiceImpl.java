@@ -3,7 +3,7 @@ package com.oa.application.other.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.oa.application.other.dto.OaAreaListDto;
+import com.oa.application.other.entity.dto.OaAreaListDto;
 import com.oa.application.other.entity.OaArea;
 import com.oa.application.other.service.IOaAreaService;
 import com.oa.domain.mapper.OaAreaMapper;
