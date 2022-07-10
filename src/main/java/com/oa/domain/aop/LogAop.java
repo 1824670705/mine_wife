@@ -9,6 +9,7 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,9 +33,15 @@ public class LogAop {
         JSONArray queryParams = JSONObject.parseArray(JSON.toJSONString(joinPoint.getArgs()));
         String userName;
         if (queryParams.size() == 0) {
-            userName = "用户没有登录";
+            try {
+                Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                userName = String.valueOf(principal);
+            } catch (Exception e) {
+                userName = "用户没有登录";
+            }
         } else {
-            userName = queryParams.stream().filter(item -> (item instanceof JSONObject) && ((JSONObject) item).containsKey("newUser")).map(item -> ((JSONObject) item).getJSONObject("newUser").getString("codeName")).findFirst().orElse("用户没有登录");
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            userName = String.valueOf(principal);
         }
         log.info("登录用户：{}\t访问方法：{}\t请求参数：{}\t", userName, methodName, queryParams.toString());
     }

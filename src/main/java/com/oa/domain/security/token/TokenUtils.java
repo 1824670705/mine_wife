@@ -37,7 +37,7 @@ public class TokenUtils {
     public static OaUserLoginResponseVo parseToken(String token) {
         DecodedJWT verify = JWT.require(Algorithm.HMAC256(tokenSignKey.getBytes())).build().verify(token);
         Date expiresAt = verify.getExpiresAt();
-        if (expiresAt.getTime() > System.currentTimeMillis()) {
+        if (expiresAt.getTime() < System.currentTimeMillis()) {
             throw new AccountExpiredException("登录过期");
         }
         Claim loginInfo = verify.getClaim("loginInfo");
