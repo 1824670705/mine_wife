@@ -17,4 +17,9 @@ public class MenuListVo extends ParentDto implements Serializable {
      * </p>
      */
     private Long parentMenuId;
+
+    /**
+     * 当亲登录用户
+     */
+    private Long createBy;
 }
