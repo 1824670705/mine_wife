@@ -1,9 +1,9 @@
 package com.oa.application.goods.controller;
 
 import com.oa.application.goods.service.GoodsService;
-import com.oa.application.goods.vo.GoodsDeleteVo;
-import com.oa.application.goods.vo.GoodsListDto;
-import com.oa.application.goods.vo.GoodsSaveVo;
+import com.oa.application.goods.entity.vo.GoodsDeleteVo;
+import com.oa.application.goods.entity.vo.GoodsListDto;
+import com.oa.application.goods.entity.vo.GoodsSaveVo;
 import com.oa.utils.result.R;
 import com.oa.utils.validate.Default;
 import org.springframework.validation.annotation.Validated;

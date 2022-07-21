@@ -12,7 +12,7 @@
         FROM
             `oa_bill`
         WHERE
-            `logic_del` = 1
+            `logic_del` = 1 and `create_by` = #{params.createBy}
         <if test="params.type == 0 and params.dateGranularity != 3">
             <if test="params.dateGranularity == 0">
                 GROUP BY DAY(`create_time`)
@@ -55,7 +55,7 @@
 	        oa_bill ob
 	        LEFT JOIN oa_area oa ON ob.local_last_id = oa.area_code
 	        <where>
-                and ob.logic_del = 1
+                and ob.logic_del = 1 and ob.`create_by` = #{params.createBy}
             </where>
     </select>
 </mapper>

@@ -41,4 +41,9 @@ public class OaBillReportQueryDto implements Serializable {
     @Max(message = "类型最大值为3【0：日，1：月，2：年，3：累计时间】", value = 3, groups = {Default.class})
     @Min(message = "类型最小值为0【0：日，1：月，2：年，3：累计时间】", value = 0, groups = {Default.class})
     private Integer dateGranularity;
+
+    /**
+     * 当前登录用户
+     */
+    private Long createBy;
 }

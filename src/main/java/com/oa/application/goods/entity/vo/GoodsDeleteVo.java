@@ -1,4 +1,4 @@
-package com.oa.application.goods.vo;
+package com.oa.application.goods.entity.vo;
 
 import com.oa.utils.validate.Default;
 import lombok.Data;

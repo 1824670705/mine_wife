@@ -1,26 +1,27 @@
-package com.oa.application.goods.entity;
+package com.oa.application.goods.entity.vo;
 
-import com.baomidou.mybatisplus.annotation.*;
-import io.swagger.annotations.ApiModelProperty;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * 商品管理页面
- */
 @Data
-@TableName("oa_goods")
-public class Goods implements Serializable {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class GoodsDto implements Serializable {
 
-    @TableId(value = "goods_id", type = IdType.ASSIGN_ID)
     private Long goodsId;
 
     /**
      * 供应商 Id
      */
     private Long supplierId;
+
+    /**
+     * 供应商
+     */
+    private String supplierName;
 
     /**
      * 商品标题
@@ -35,7 +36,6 @@ public class Goods implements Serializable {
     /**
      * 商品描述
      */
-    @TableField("goods_desc")
     private String goodsDesc;
 
     /**
@@ -63,17 +63,11 @@ public class Goods implements Serializable {
      */
     private Integer goodsStatus;
 
-    @ApiModelProperty(value = "备注")
+    /**
+     * 备注
+     */
     private String remake;
 
-    @TableField(fill = FieldFill.INSERT)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
-
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    private Date updateTime;
-
-    @ApiModelProperty(value = "0删除。1正常使用")
-    @TableLogic
-    @TableField(fill = FieldFill.INSERT)
-    private Integer logicDel;
 }

@@ -1,4 +1,4 @@
-package com.oa.application.goods.vo;
+package com.oa.application.goods.entity.vo;
 
 import com.oa.utils.dto.ParentDto;
 import lombok.Data;
@@ -26,4 +26,9 @@ public class GoodsListDto extends ParentDto implements Serializable {
      * 订单状态
      */
     private Integer goodsStatus;
+
+    /**
+     * 当前登录用户 Id
+     */
+    private Long createBy;
 }

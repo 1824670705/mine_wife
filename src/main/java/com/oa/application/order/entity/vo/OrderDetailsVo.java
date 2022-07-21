@@ -1,6 +1,6 @@
 package com.oa.application.order.entity.vo;
 
-import com.oa.application.goods.vo.GoodsSaveVo;
+import com.oa.application.goods.entity.vo.GoodsSaveVo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 

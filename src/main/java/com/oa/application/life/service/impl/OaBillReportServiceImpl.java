@@ -4,6 +4,7 @@ import com.oa.application.life.entity.dto.OaBillReportQueryDto;
 import com.oa.application.life.entity.vo.OaBillReportResponseVo;
 import com.oa.application.life.service.OaBillReportService;
 import com.oa.domain.mapper.OaBillMapper;
+import com.oa.utils.other.LoginUserInfoUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,7 @@ public class OaBillReportServiceImpl implements OaBillReportService {
      */
     @Override
     public Object queryReportBill(OaBillReportQueryDto oaBillReportQueryVo) {
+        oaBillReportQueryVo.setCreateBy(LoginUserInfoUtils.getLoginUserId());
         // 统计类型
         if (oaBillReportQueryVo.getType() == 4) {
             List<Object> list = new ArrayList<>();

@@ -4,7 +4,7 @@
 
     <resultMap id="order_details_vo" type="com.oa.application.order.entity.vo.OrderDetailsVo" autoMapping="true">
         <id column="order_id" property="orderId"/>
-        <collection property="shops" javaType="java.util.List" ofType="com.oa.application.goods.vo.GoodsSaveVo" autoMapping="true">
+        <collection property="shops" javaType="java.util.List" ofType="com.oa.application.goods.entity.vo.GoodsSaveVo" autoMapping="true">
             <id column="goods_id" property="goodsId" />
         </collection>
     </resultMap>

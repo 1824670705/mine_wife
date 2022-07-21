@@ -1,7 +1,6 @@
 package com.oa.application.order.entity.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.oa.application.goods.vo.GoodsDto;
 import com.oa.utils.validate.Update;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

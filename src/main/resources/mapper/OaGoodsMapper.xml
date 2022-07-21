@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.oa.domain.mapper.OaGoodsMapper">
 
-    <select id="getList" resultType="com.oa.application.goods.vo.GoodsDto">
+    <select id="getList" resultType="com.oa.application.goods.entity.vo.GoodsDto">
         SELECT
             og.goods_id,
             os.supplier_id,
@@ -33,7 +33,7 @@
             <if test="goodsListVo.searchType != null and goodsListVo.searchKeyword != null and goodsListVo.searchKeyword != '' and goodsListVo.searchType == 2">
                 and og.`goods_id` like concat('%', #{goodsListVo.searchKeyword}, '%')
             </if>
-            and og.`logic_del` = 1
+            and og.`logic_del` = 1 and og.`create_by` = #{goodsListVo.createBy}
         </where>
             order by og.create_time desc
     </select>
