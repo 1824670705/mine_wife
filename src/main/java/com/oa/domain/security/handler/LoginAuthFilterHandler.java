@@ -46,8 +46,8 @@ public class LoginAuthFilterHandler extends BasicAuthenticationFilter {
         } else {
             // 解析 token
             OaUserLoginResponseVo loginResponseVo = TokenUtils.parseToken(token);
-            Object userInfo = oaRedisTemplate.opsForHash().get(RedisKeyConstant.userLoginKey, ip + ":" + loginResponseVo.getUserId());
-            Assert.notNull(userInfo, "登录信息不存在");
+            Boolean aBoolean = oaRedisTemplate.opsForHash().hasKey(RedisKeyConstant.userLoginKey, ip + ":" + loginResponseVo.getUserId());
+            Assert.isTrue(aBoolean, "登录信息不存在");
             // 解析角色信息
             List<SimpleGrantedAuthority> roleCollect = loginResponseVo.getRoles().stream().map(v -> new SimpleGrantedAuthority("ROLE_" + v.getRoleName())).collect(Collectors.toList());
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginResponseVo.getUsername(), token, roleCollect);

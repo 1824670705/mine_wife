@@ -66,9 +66,12 @@
 
     <select id="query" resultType="com.oa.application.order.entity.vo.OaOrderReportVo" parameterType="com.oa.application.order.entity.dto.OaOrderReportDto">
         SELECT
-            SUM(cast(ord_price as DECIMAL)) as 'sale_total',
-            SUM(cast(ord_cost as DECIMAL)) as 'cost_total',
-            SUM(cast(ord_profit as DECIMAL)) as 'profit_total'
+            SUM(
+            CONVERT ( ord_price, DECIMAL ( 18, 2 ) )) AS 'sale_total',
+            SUM(
+            CONVERT ( ord_cost, DECIMAL ( 18, 2 ) )) AS 'cost_total',
+            SUM(
+            CONVERT ( ord_profit, DECIMAL ( 18, 2 ) )) AS 'profit_total'
         FROM
             oa_order
         <where>
