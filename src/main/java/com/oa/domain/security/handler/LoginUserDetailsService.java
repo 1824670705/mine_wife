@@ -26,6 +26,6 @@ public class LoginUserDetailsService implements UserDetailsService {
         // 查询用户名
         OaUserLoginResponseVo userLoginResponseVo = oaUserService.login(userAccess);
         if (ObjectUtils.isEmpty(userLoginResponseVo)) throw new UsernameNotFoundException("用户不存在，检查账户是否输入正确");
-        return new LoginUserDetails(userAccess, userLoginResponseVo.getPassword(), null, userLoginResponseVo.getRoles().stream().map(OaRoleVo::getRoleName).collect(Collectors.toList()), userLoginResponseVo.getToken());
+        return new LoginUserDetails(userLoginResponseVo.getUserId().toString(), userLoginResponseVo.getPassword(), null, userLoginResponseVo.getRoles().stream().map(OaRoleVo::getRoleName).collect(Collectors.toList()), userLoginResponseVo.getToken());
     }
 }

@@ -49,7 +49,7 @@ public class OaSpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests().antMatchers("/public/**").permitAll()
                 .anyRequest().authenticated();
         http.addFilterAt(new LoginUsernamePasswordFilter(authenticationManager(), oaRedisTemplate), UsernamePasswordAuthenticationFilter.class)
-                .addFilter(new LoginAuthFilterHandler(authenticationManager()));
+                .addFilter(new LoginAuthFilterHandler(authenticationManager(), oaRedisTemplate));
     }
 
     @Override

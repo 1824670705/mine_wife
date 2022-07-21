@@ -5,18 +5,22 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class LoginUserDetails implements UserDetails {
+public class LoginUserDetails implements UserDetails, Serializable {
 
-    private final String userName;
-    private final String password;
+    private String userName;
+    private String password;
     @Getter
-    private final String token;
-    private final String ip;
-    private final List<String> roles;
+    private String token;
+    private String ip;
+    private List<String> roles;
+
+    public LoginUserDetails() {
+    }
 
     public LoginUserDetails(String userName, String password, String ip, List<String> roles, String token) {
         this.userName = userName;

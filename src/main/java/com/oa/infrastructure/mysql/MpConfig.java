@@ -1,4 +1,4 @@
-package com.oa.infrastructure.mysql.config;
+package com.oa.infrastructure.mysql;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
