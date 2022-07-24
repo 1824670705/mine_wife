@@ -16,6 +16,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
@@ -69,6 +70,7 @@ public class OaUserServiceImpl extends ServiceImpl<OaUserMapper, OaUser> impleme
         if (ObjectUtils.isEmpty(oaUserSaveTo.getAvatar()))
             oaUserSaveTo.setAvatar("[\"http://129.151.117.242:9000/oa-wife/2022/06/15/1655261196873_20170310223301qj0sqxi3mnr97558.jpg\"]");
         // 自动生成账户
+        Assert.isTrue(!ObjectUtils.isEmpty(oaUserSaveTo.getOaRoleVos()), "角色信息不可以为空");
         oaUserSaveTo.setAccount("oa" + UUID.randomUUID().toString().replace("-", "").substring(0, 6));
         // 密码加密
         oaUserSaveTo.setPassword(bCryptPasswordEncoder.encode(oaUserSaveTo.getPassword()));

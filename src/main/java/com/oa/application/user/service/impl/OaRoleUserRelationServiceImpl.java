@@ -31,7 +31,7 @@ public class OaRoleUserRelationServiceImpl extends ServiceImpl<OaRoleUserRelatio
         // 保存
         List<OaRoleUserRelation> collect = oaRoleVos.parallelStream().map(v -> {
             OaRoleUserRelation relation = new OaRoleUserRelation();
-            relation.setRoleUserId(v).setUserId(userId);
+            relation.setRoleId(v).setUserId(userId);
             return relation;
         }).collect(Collectors.toList());
         saveBatch(collect);
