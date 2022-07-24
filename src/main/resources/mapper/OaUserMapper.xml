@@ -24,7 +24,7 @@
     <select id="getList" resultType="com.oa.application.user.entity.bo.OaUser">
         select * from oa_user ou
         <where>
-            and ou.logic_del = 1
+            and ou.logic_del = 1 and ou.`create_by` = #{userListVo.createBy}
         </where>
         order by ou.create_time desc
     </select>

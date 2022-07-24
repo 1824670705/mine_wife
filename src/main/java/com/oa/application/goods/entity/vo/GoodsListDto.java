@@ -26,9 +26,4 @@ public class GoodsListDto extends ParentDto implements Serializable {
      * 订单状态
      */
     private Integer goodsStatus;
-
-    /**
-     * 当前登录用户 Id
-     */
-    private Long createBy;
 }

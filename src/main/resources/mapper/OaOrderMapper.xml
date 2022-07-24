@@ -75,7 +75,7 @@
         FROM
             oa_order
         <where>
-            and `logic_del` = 1
+            and `logic_del` = 1 and `create_by` = #{params.createBy}
         </where>
     </select>
 </mapper>

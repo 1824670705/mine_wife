@@ -61,5 +61,10 @@ public class OaFile implements Serializable {
      * 创建者名字
      */
     private String ownerName;
+
+    /**
+     * 创建者 Id
+     */
+    private Long createBy;
 }
 

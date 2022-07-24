@@ -40,7 +40,7 @@
         FROM
             oa_supplier os
         <where>
-            os.logic_del = 1
+            os.logic_del = 1 and os.`create_by` = #{supplierListVo.createBy}
         </where>
         order by os.create_time desc
     </select>

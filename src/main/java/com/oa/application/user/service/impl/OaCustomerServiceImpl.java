@@ -10,6 +10,7 @@ import com.oa.application.user.vo.CustomerListVo;
 import com.oa.application.user.vo.CustomerSaveVo;
 import com.oa.application.user.vo.OaCustomerDto;
 import com.oa.domain.mapper.OaCustomerMapper;
+import com.oa.utils.other.LoginUserInfoUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,7 @@ public class OaCustomerServiceImpl extends ServiceImpl<OaCustomerMapper, OaCusto
     @Override
     public Page<OaCustomerDto> getList(CustomerListVo customerListVo) {
         Page<OaCustomerDto> page = new Page<>(customerListVo.getPageIndex(), customerListVo.getPageSize());
+        customerListVo.setCreateBy(LoginUserInfoUtils.getLoginUserId());
         Page<OaCustomerDto> listPage = baseMapper.getList(page, customerListVo);
         listPage.setRecords(listPage.getRecords().stream().peek(v -> v.setCusLocation(iOaAreaService.getFullAreaName(v.getCusLocation(), "-"))).collect(Collectors.toList()));
         return listPage;
@@ -56,6 +58,7 @@ public class OaCustomerServiceImpl extends ServiceImpl<OaCustomerMapper, OaCusto
             customer.setWhetherBlack(0);
             return null;
         });
+        customer.setCreateBy(LoginUserInfoUtils.getLoginUserId());
         save(customer.setCusTagId(""));
         // 保存标签关系
         return oaMenuRelationService.saveByOutIds(customerSaveVo.getCusTagId(), customer.getCusId());

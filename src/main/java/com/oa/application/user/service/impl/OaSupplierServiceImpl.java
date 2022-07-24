@@ -12,6 +12,7 @@ import com.oa.application.user.vo.OaSupplierDto;
 import com.oa.application.user.vo.SupplierListVo;
 import com.oa.application.user.vo.SupplierSaveVo;
 import com.oa.domain.mapper.OaSupplierMapper;
+import com.oa.utils.other.LoginUserInfoUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +42,7 @@ public class OaSupplierServiceImpl extends ServiceImpl<OaSupplierMapper, OaSuppl
     @Override
     public Page<OaSupplierDto> getList(SupplierListVo supplierListVo) {
         Page<OaSupplierDto> page = new Page<>(supplierListVo.getPageIndex(), supplierListVo.getPageSize());
+        supplierListVo.setCreateBy(LoginUserInfoUtils.getLoginUserId());
         Page<OaSupplierDto> listPage = baseMapper.getList(page, supplierListVo);
         listPage.setRecords(listPage.getRecords().stream().peek(v -> v.setSupplierLocale(iOaAreaService.getFullAreaName(v.getSupplierLocale(), "-"))).collect(Collectors.toList()));
         return listPage;
@@ -56,7 +58,7 @@ public class OaSupplierServiceImpl extends ServiceImpl<OaSupplierMapper, OaSuppl
         OaSupplier oaSupplier = new OaSupplier();
         oaSupplier.setCreateBy(1L);
         BeanUtils.copyProperties(oaSupplierVo, oaSupplier);
-        save(oaSupplier.setCreateBy(1L).setSupplierTagId(null));
+        save(oaSupplier.setCreateBy(LoginUserInfoUtils.getLoginUserId()).setSupplierTagId(null));
         return oaMenuRelationService.saveByOutIds(oaSupplierVo.getSupplierTagId(), oaSupplier.getSupplierId());
     }
 

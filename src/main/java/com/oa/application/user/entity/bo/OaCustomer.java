@@ -61,4 +61,9 @@ public class OaCustomer implements Serializable {
     @TableLogic
     @TableField(fill = FieldFill.INSERT)
     private Integer logicDel;
+
+    /**
+     * 创建者
+     */
+    private Long createBy;
 }

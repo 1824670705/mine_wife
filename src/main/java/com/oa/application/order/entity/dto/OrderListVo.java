@@ -20,9 +20,4 @@ public class OrderListVo extends ParentDto implements Serializable {
      * 检索关键字
      */
     private String searchKeyword;
-
-    /**
-     * 当前登录用户
-     */
-    private Long createBy;
 }

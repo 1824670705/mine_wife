@@ -39,7 +39,7 @@
         FROM
             oa_customer oc
         <where>
-            oc.logic_del = 1
+            oc.`logic_del` = 1 and oc.`create_by` = #{customerListVo.createBy}
         </where>
         order by oc.create_time desc
     </select>

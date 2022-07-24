@@ -20,4 +20,9 @@ public class OaOrderReportDto extends ParentDto {
      * 统计时间范围
      */
     private Date[] dateRange;
+
+    /**
+     * 当亲登陆人
+     */
+    private Long createBy;
 }

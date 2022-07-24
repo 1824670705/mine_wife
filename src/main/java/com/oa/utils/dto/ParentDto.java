@@ -30,4 +30,9 @@ public class ParentDto implements Serializable {
      * 结束时间
      */
     private Date endDate;
+
+    /**
+     * 创建者 Id
+     */
+    private Long createBy;
 }

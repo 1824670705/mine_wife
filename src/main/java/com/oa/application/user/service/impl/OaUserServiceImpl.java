@@ -11,6 +11,7 @@ import com.oa.application.user.service.OaUserService;
 import com.oa.application.user.vo.OaUserListVo;
 import com.oa.domain.mapper.OaUserMapper;
 import com.oa.domain.security.token.TokenUtils;
+import com.oa.utils.other.LoginUserInfoUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,7 @@ public class OaUserServiceImpl extends ServiceImpl<OaUserMapper, OaUser> impleme
     @Override
     public Page<OaUser> getList(OaUserListVo userListVo) {
         Page<OaUser> page = new Page<>(userListVo.getPageIndex(), userListVo.getPageSize());
+        userListVo.setCreateBy(LoginUserInfoUtils.getLoginUserId());
         Page<OaUser> listPage = baseMapper.getList(page, userListVo);
         listPage.setRecords(listPage.getRecords().stream().peek(v -> v.setLocationId(iOaAreaService.getFullAreaName(v.getLocationId(), "-"))).collect(Collectors.toList()));
         return listPage;
@@ -73,6 +75,7 @@ public class OaUserServiceImpl extends ServiceImpl<OaUserMapper, OaUser> impleme
         // 用户角色添加
         OaUser oaUser = new OaUser();
         BeanUtils.copyProperties(oaUserSaveTo, oaUser);
+        oaUser.setCreateBy(LoginUserInfoUtils.getLoginUserId());
         boolean save = save(oaUser);
         // 建立绑定关系
         Optional.ofNullable(oaUserSaveTo.getOaRoleVos()).ifPresent(v -> oaRoleUserRelationService.bingUserRole(v, oaUser.getUserId()));
