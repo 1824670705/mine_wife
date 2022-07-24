@@ -85,4 +85,9 @@ public class OaOrder implements Serializable {
     @TableLogic
     @TableField(fill = FieldFill.INSERT)
     private Integer logicDel;
+
+    /**
+     * 创建者 Id
+     */
+    private Long createBy;
 }

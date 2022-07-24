@@ -20,7 +20,7 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface OaOrderMapper extends BaseMapper<OaOrder> {
 
-    Page<OrderResponseVo> getListByPage(Page<OaOrder> page, @Param("orderListVo") OrderListVo orderListVo);
+    Page<OrderResponseVo> getListByPage(Page<OaOrder> page, @Param("params") OrderListVo orderListVo);
 
     OrderDetailsVo getOneOrder(Long orderId);
 

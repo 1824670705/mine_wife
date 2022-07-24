@@ -33,7 +33,7 @@
         LEFT JOIN oa_menu om ON om.menu_id = oo.express_id
         LEFT JOIN oa_supplier os ON os.supplier_id = oo.ord_supplier
         <where>
-            and oo.`logic_del` = 1
+            and oo.`logic_del` = 1 and oo.`create_by` = #{params.createBy}
         </where>
         order by oo.create_time desc
     </select>

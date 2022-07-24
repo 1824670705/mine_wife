@@ -11,6 +11,7 @@ import com.oa.application.order.entity.vo.OrderResponseVo;
 import com.oa.application.order.service.IOaOrderService;
 import com.oa.application.order.service.OaOrderGoodsRelationService;
 import com.oa.domain.mapper.OaOrderMapper;
+import com.oa.utils.other.LoginUserInfoUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +38,7 @@ public class OaOrderServiceImpl extends ServiceImpl<OaOrderMapper, OaOrder> impl
     @Override
     public Page<OrderResponseVo> getList(OrderListVo orderListVo) {
         Page<OaOrder> page = new Page<>(orderListVo.getPageIndex(), orderListVo.getPageSize());
+        orderListVo.setCreateBy(LoginUserInfoUtils.getLoginUserId());
         return baseMapper.getListByPage(page, orderListVo);
     }
 
@@ -64,6 +66,7 @@ public class OaOrderServiceImpl extends ServiceImpl<OaOrderMapper, OaOrder> impl
             oaOrder.setExpressId(0L);
             return 0L;
         });
+        oaOrder.setCreateBy(LoginUserInfoUtils.getLoginUserId());
         save(oaOrder);
         // 保存订单和商品的关联关系
         return oaOrderGoodsRelationService.saveBatchRelation(oaOrderSaveVo.getShops(), oaOrder.getOrderId());
