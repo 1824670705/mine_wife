@@ -37,6 +37,13 @@ public class OaMenu implements Serializable {
     @ApiModelProperty(value = "菜单父类Id，没有为0")
     private Long parentMenuId;
 
+    /**
+     * 全局标志
+     * <p>
+     * 0：全局，1：个人
+     */
+    private Integer globalTag;
+
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
 

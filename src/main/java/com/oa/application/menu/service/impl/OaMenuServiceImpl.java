@@ -35,7 +35,10 @@ public class OaMenuServiceImpl extends ServiceImpl<OaMenuMapper, OaMenu> impleme
         Optional.ofNullable(orderListVo.getParentMenuId()).ifPresent(parentMenuId ->
                 wrapper.eq("parent_menu_id", parentMenuId)
         );
-        wrapper.eq("create_by", LoginUserInfoUtils.getLoginUserId());
+        wrapper.and(v -> {
+            v.eq("create_by", LoginUserInfoUtils.getLoginUserId()).or()
+                    .eq("global_tag", 0);
+        });
         return baseMapper.selectPage(page, wrapper);
     }
 
@@ -46,7 +49,7 @@ public class OaMenuServiceImpl extends ServiceImpl<OaMenuMapper, OaMenu> impleme
      */
     @Override
     public Object saveMenu(OaMenu oaMenu) {
-        oaMenu.setCreateBy(LoginUserInfoUtils.getLoginUserId());
+        oaMenu.setCreateBy(LoginUserInfoUtils.getLoginUserId()).setCreateBy(LoginUserInfoUtils.getLoginUserId());
         return this.save(oaMenu);
     }
 
@@ -55,6 +58,10 @@ public class OaMenuServiceImpl extends ServiceImpl<OaMenuMapper, OaMenu> impleme
     public Object deleteRow(DelVo delVo) {
         if (delVo.getWhetherParent() != null && delVo.getWhetherParent() == 1) {
             QueryWrapper<OaMenu> wrapper = new QueryWrapper<OaMenu>().in("menu_id", delVo.getDelIds());
+            wrapper.and(v -> {
+                v.eq("create_by", LoginUserInfoUtils.getLoginUserId()).or()
+                        .eq("global_tag", 1);
+            });
             List<OaMenu> oaMenus = baseMapper.selectList(wrapper);
             // 删除主数据
             if (!ObjectUtils.isEmpty(delVo.getDelIds())) {
@@ -72,6 +79,9 @@ public class OaMenuServiceImpl extends ServiceImpl<OaMenuMapper, OaMenu> impleme
 
     @Override
     public List<OaMenu> getParentDetail(Long parentId) {
-        return list(new QueryWrapper<OaMenu>().eq("parent_menu_id", parentId));
+        QueryWrapper<OaMenu> wrapper = new QueryWrapper<OaMenu>()
+                .eq("parent_menu_id", parentId)
+                .eq("create_by", LoginUserInfoUtils.getLoginUserId());
+        return list(wrapper);
     }
 }
