@@ -2,10 +2,14 @@ package com.oa.domain.security.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.oa.application.user.entity.vo.OaUserLoginResponseVo;
+import com.oa.domain.security.token.TokenUtils;
 import com.oa.utils.constans.RedisKeyConstant;
 import com.oa.utils.other.RequestUtils;
 import com.oa.utils.other.ResponseUtils;
 import com.oa.utils.result.R;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -67,12 +71,28 @@ public class LoginUsernamePasswordFilter extends UsernamePasswordAuthenticationF
         HashOperations<String, Object, Object> opsForHash = oaRedisTemplate.opsForHash();
         // 写入 redis
         opsForHash.put(RedisKeyConstant.userLoginKey, RequestUtils.getIp(request) + ":" + principal.getUsername(), principal);
-        ResponseUtils.responseInfoByJson(response, R.success().message("认证成功").data(principal.getToken()));
+        OaUserLoginResponseVo responseVo = TokenUtils.parseToken(principal.getToken());
+        responseVo.setPassword("");
+        ResponseUtils.responseInfoByJson(response, R.success().message("认证成功").data(new LoginVo(principal.getToken(), responseVo)));
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         log.warn("认证失败");
         ResponseUtils.responseInfoByJson(response, R.error().code(401).message("认证失败"));
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class LoginVo {
+        /**
+         * 登录 token
+         */
+        private String token;
+
+        /**
+         * 用户信息
+         */
+        private OaUserLoginResponseVo userInfo;
     }
 }
