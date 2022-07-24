@@ -44,16 +44,18 @@
             ob.bill_shop,
             ob.local_last_id,
             oa.area_full_code,
-            oa.area_full_name,
+            oa.area_full_name as 'local_full_name',
             ob.pay_type_id,
             ob.pay_type_name,
             ob.bill_type_id,
             ob.bill_type_name,
             ob.create_by,
+            ou.`user_name` as 'create_by_as_name',
             ob.create_time
         FROM
 	        oa_bill ob
 	        LEFT JOIN oa_area oa ON ob.local_last_id = oa.area_code
+            LEFT JOIN oa_user ou ON ou.`user_id` = ob.`create_by`
 	        <where>
                 and ob.logic_del = 1 and ob.`create_by` = #{params.createBy}
             </where>

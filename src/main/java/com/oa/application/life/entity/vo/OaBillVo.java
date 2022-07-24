@@ -68,9 +68,14 @@ public class OaBillVo implements Serializable {
     private String billTypeId;
 
     /**
-     * 创建者
+     * 创建者 Id
      */
     private Long createBy;
+
+    /**
+     * 创建者
+     */
+    private String createByAsName;
 
     /**
      * 创建时间

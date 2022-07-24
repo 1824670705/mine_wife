@@ -8,6 +8,7 @@ import com.oa.application.menu.service.IOaMenuService;
 import com.oa.application.menu.vo.DelVo;
 import com.oa.application.menu.vo.MenuListVo;
 import com.oa.domain.mapper.OaMenuMapper;
+import com.oa.utils.constans.MenuConstant;
 import com.oa.utils.other.LoginUserInfoUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,10 +36,10 @@ public class OaMenuServiceImpl extends ServiceImpl<OaMenuMapper, OaMenu> impleme
         Optional.ofNullable(orderListVo.getParentMenuId()).ifPresent(parentMenuId ->
                 wrapper.eq("parent_menu_id", parentMenuId)
         );
-        wrapper.and(v -> {
-            v.eq("create_by", LoginUserInfoUtils.getLoginUserId()).or()
-                    .eq("global_tag", 0);
-        });
+        wrapper.and(v ->
+                v.eq("create_by", LoginUserInfoUtils.getLoginUserId()).or()
+                        .eq("global_tag", MenuConstant.GlobalTag.global_tag)
+        );
         return baseMapper.selectPage(page, wrapper);
     }
 
@@ -58,10 +59,10 @@ public class OaMenuServiceImpl extends ServiceImpl<OaMenuMapper, OaMenu> impleme
     public Object deleteRow(DelVo delVo) {
         if (delVo.getWhetherParent() != null && delVo.getWhetherParent() == 1) {
             QueryWrapper<OaMenu> wrapper = new QueryWrapper<OaMenu>().in("menu_id", delVo.getDelIds());
-            wrapper.and(v -> {
-                v.eq("create_by", LoginUserInfoUtils.getLoginUserId()).or()
-                        .eq("global_tag", 1);
-            });
+            wrapper.and(v ->
+                    v.eq("create_by", LoginUserInfoUtils.getLoginUserId()).or()
+                            .eq("global_tag", MenuConstant.GlobalTag.customer_tag)
+            );
             List<OaMenu> oaMenus = baseMapper.selectList(wrapper);
             // 删除主数据
             if (!ObjectUtils.isEmpty(delVo.getDelIds())) {
@@ -81,7 +82,10 @@ public class OaMenuServiceImpl extends ServiceImpl<OaMenuMapper, OaMenu> impleme
     public List<OaMenu> getParentDetail(Long parentId) {
         QueryWrapper<OaMenu> wrapper = new QueryWrapper<OaMenu>()
                 .eq("parent_menu_id", parentId)
-                .eq("create_by", LoginUserInfoUtils.getLoginUserId());
+                .and(v ->
+                        v.eq("create_by", LoginUserInfoUtils.getLoginUserId()).or()
+                                .eq("global_tag", MenuConstant.GlobalTag.global_tag)
+                );
         return list(wrapper);
     }
 }
