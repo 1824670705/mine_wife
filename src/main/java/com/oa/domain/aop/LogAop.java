@@ -3,6 +3,8 @@ package com.oa.domain.aop;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.oa.application.log.entity.bo.Log;
+import com.oa.application.log.service.LogService;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -14,10 +16,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.annotation.Resource;
+
 @Slf4j
 @Aspect
 @Component
 public class LogAop {
+
+    @Resource(name = "logService")
+    private LogService logService;
+
     @Pointcut("execution(* com.oa.application.*.controller.*.*(..))")
     public void pointCut() {
     }
@@ -44,6 +52,12 @@ public class LogAop {
             userName = String.valueOf(principal);
         }
         log.info("登录用户：{}\t访问方法：{}\t请求参数：{}\t", userName, methodName, queryParams.toString());
+    }
+
+    private void saveLog() {
+        Log logBean = new Log();
+
+        logService.save(logBean);
     }
 
     @AfterThrowing(pointcut = "pointCut()")
