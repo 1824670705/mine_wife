@@ -26,7 +26,15 @@ public class Log {
      * 日志模块
      */
     private String logModule;
+
+    /**
+     * 操作用户 Id
+     */
     private Long logOpUserId;
+
+    /**
+     * 操作用户名字
+     */
     private String logOpUserName;
 
     /**
@@ -38,7 +46,7 @@ public class Log {
     /**
      * 创建者
      */
-    private Integer createBy;
+    private Long createBy;
 
     /**
      * 创建时间

@@ -5,12 +5,16 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.oa.application.log.entity.bo.Log;
 import com.oa.application.log.service.LogService;
+import com.oa.application.user.entity.vo.OaUserLoginResponseVo;
+import com.oa.domain.security.token.TokenUtils;
+import com.oa.utils.constans.LogConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
@@ -40,23 +44,34 @@ public class LogAop {
         }
         JSONArray queryParams = JSONObject.parseArray(JSON.toJSONString(joinPoint.getArgs()));
         String userName;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (queryParams.size() == 0) {
             try {
-                Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                Object principal = authentication.getPrincipal();
                 userName = String.valueOf(principal);
             } catch (Exception e) {
                 userName = "用户没有登录";
             }
         } else {
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Object principal = authentication.getPrincipal();
             userName = String.valueOf(principal);
         }
-        log.info("登录用户：{}\t访问方法：{}\t请求参数：{}\t", userName, methodName, queryParams.toString());
+        OaUserLoginResponseVo loginResponseVo = TokenUtils.parseToken(String.valueOf(authentication.getCredentials()));
+        saveLog(loginResponseVo, methodName, queryParams.toJSONString(), aClass);
+        log.info("登录用户：{}\t访问方法：{}\tAmazonDateUtils请求参数：{}\t", userName, methodName, queryParams.toString());
     }
 
-    private void saveLog() {
+    private void saveLog(OaUserLoginResponseVo loginResponseVo, String method, String params, Class<?> targetClass) {
         Log logBean = new Log();
-
+        for (LogConstant.LogModuleConstant moduleConstant : LogConstant.LogModuleConstant.values()) {
+            if (moduleConstant.getModuleController() == targetClass) {
+                // 逻辑处理
+                logBean.setLogModule(moduleConstant.getDesc());
+                break;
+            }
+        }
+        logBean.setLogOpUserName(loginResponseVo.getUsername()).setLogOpUserId(loginResponseVo.getUserId()).setLogContent(method + "=>" + params)
+                .setCreateBy(loginResponseVo.getUserId()).setLogType(LogConstant.LogTypeConstant.defaultType);
         logService.save(logBean);
     }
 
