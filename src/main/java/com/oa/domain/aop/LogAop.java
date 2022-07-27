@@ -8,6 +8,7 @@ import com.oa.application.log.service.LogService;
 import com.oa.application.user.entity.vo.OaUserLoginResponseVo;
 import com.oa.domain.security.token.TokenUtils;
 import com.oa.utils.constans.LogConstant;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -36,29 +37,11 @@ public class LogAop {
 
     @AfterReturning(value = "pointCut()")
     public void returnAfter(JoinPoint joinPoint) {
-        String methodName = joinPoint.getSignature().getName();
-        Class<?> aClass = joinPoint.getTarget().getClass();
-        RequestMapping annotation = aClass.getAnnotation(RequestMapping.class);
-        if (!ObjectUtils.isEmpty(annotation)) {
-            if ("/file".equals(annotation.value()[0])) return;
+        JoinPointInfo loginUserInfo = getLoginUserInfo(joinPoint);
+        if (ObjectUtils.isEmpty(loginUserInfo)) {
+            log.info("登录用户：{}\t访问方法：{}\tAmazonDateUtils请求参数：{}\t", userName, methodName, queryParams);
         }
-        JSONArray queryParams = JSONObject.parseArray(JSON.toJSONString(joinPoint.getArgs()));
-        String userName;
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (queryParams.size() == 0) {
-            try {
-                Object principal = authentication.getPrincipal();
-                userName = String.valueOf(principal);
-            } catch (Exception e) {
-                userName = "用户没有登录";
-            }
-        } else {
-            Object principal = authentication.getPrincipal();
-            userName = String.valueOf(principal);
-        }
-        OaUserLoginResponseVo loginResponseVo = TokenUtils.parseToken(String.valueOf(authentication.getCredentials()));
-        saveLog(loginResponseVo, methodName, queryParams.toJSONString(), aClass);
-        log.info("登录用户：{}\t访问方法：{}\tAmazonDateUtils请求参数：{}\t", userName, methodName, queryParams.toString());
+        log.info("登录用户：{}\t访问方法：{}\tAmazonDateUtils请求参数：{}\t", userName, methodName, queryParams);
     }
 
     private void saveLog(OaUserLoginResponseVo loginResponseVo, String method, String params, Class<?> targetClass) {
@@ -78,5 +61,70 @@ public class LogAop {
     @AfterThrowing(pointcut = "pointCut()")
     public void logAfterReturnThrow(JoinPoint joinPoint) {
         log.error("发生异常{}", joinPoint.getTarget());
+    }
+
+    /**
+     * parse joinPoint 获取 join point about user info and method info or target conrtoll class info
+     *
+     * @param joinPoint 方法和类信息
+     */
+    private JoinPointInfo getLoginUserInfo(JoinPoint joinPoint) {
+        JoinPointInfo info = new JoinPointInfo();
+        String methodName = joinPoint.getSignature().getName();
+        info.setMethodName(methodName);
+        Class<?> aClass = joinPoint.getTarget().getClass();
+        info.setTargetClass(aClass);
+        RequestMapping annotation = aClass.getAnnotation(RequestMapping.class);
+        if (!ObjectUtils.isEmpty(annotation)) {
+            if ("/file".equals(annotation.value()[0])) return null;
+        }
+        JSONArray queryParams = JSONObject.parseArray(JSON.toJSONString(joinPoint.getArgs()));
+        info.setParams(queryParams.toJSONString());
+        String userName;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (queryParams.size() == 0) {
+            try {
+                Object principal = authentication.getPrincipal();
+                userName = String.valueOf(principal);
+                OaUserLoginResponseVo loginResponseVo = TokenUtils.parseToken(String.valueOf(authentication.getCredentials()));
+                info.setOaUserLoginResponseVo(loginResponseVo);
+            } catch (Exception e) {
+                userName = "用户没有登录";
+            }
+        } else {
+            Object principal = authentication.getPrincipal();
+            userName = String.valueOf(principal);
+        }
+        info.setUsername(userName);
+        return info;
+    }
+
+    @Data
+    static class JoinPointInfo {
+
+        /**
+         * 方法名
+         */
+        private String methodName;
+
+        /**
+         * 用户名
+         */
+        private String username;
+
+        /**
+         * 当前登录用户信息
+         */
+        private OaUserLoginResponseVo oaUserLoginResponseVo;
+
+        /**
+         * 当前访问的类
+         */
+        private Class<?> targetClass;
+
+        /**
+         * 参数信息
+         */
+        private String params;
     }
 }
