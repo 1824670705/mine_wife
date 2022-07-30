@@ -55,6 +55,7 @@ public class MyMvcConfig extends WebMvcConfigurationSupport {
         objectMapper.registerModule(factory);
         // 忽略不存在的 json 字符串
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
         converter.setObjectMapper(objectMapper);
         return converter;
     }
