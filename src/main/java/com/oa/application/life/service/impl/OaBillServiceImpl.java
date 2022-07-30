@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.Optional;
 
-@Service
+@Service("oaBillService")
 public class OaBillServiceImpl extends ServiceImpl<OaBillMapper, OaBill> implements OaBillService {
 
     @Resource

@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/bill")
 public class OaBillController {
 
-    @Resource
+    @Resource(name = "oaBillService")
     private OaBillService oaBillService;
 
     @GetMapping("/list")
