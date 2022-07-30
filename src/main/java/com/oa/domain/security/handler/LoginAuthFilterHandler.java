@@ -38,7 +38,6 @@ public class LoginAuthFilterHandler extends BasicAuthenticationFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        log.info("解析授权信息");
         String token = request.getHeader("token");
         String ip = RequestUtils.getIp(request);
         if (ObjectUtils.isEmpty(token)) {

@@ -12,7 +12,6 @@ import java.util.Date;
 public class MpFieldFillConfig implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
-        log.info("start insert fill ....");
         this.strictInsertFill(metaObject, "createTime", Date::new, Date.class);
         this.strictInsertFill(metaObject, "updateTime", Date::new, Date.class);
         this.strictInsertFill(metaObject, "logicDel", () -> 1, Integer.class);
@@ -20,7 +19,6 @@ public class MpFieldFillConfig implements MetaObjectHandler {
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        log.info("start update fill ....");
         this.strictUpdateFill(metaObject, "updateTime", Date::new, Date.class);
     }
 }

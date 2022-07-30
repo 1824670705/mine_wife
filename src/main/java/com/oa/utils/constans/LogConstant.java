@@ -6,9 +6,11 @@ import com.oa.application.life.controller.OaBillReportController;
 import com.oa.application.log.controller.LogController;
 import com.oa.application.menu.controller.OaMenuController;
 import com.oa.application.order.controller.OaOrderController;
+import com.oa.application.order.controller.OaOrderGoodsRelationController;
 import com.oa.application.order.controller.OaOrderReportController;
 import com.oa.application.other.controller.FileController;
 import com.oa.application.other.controller.OaAreaController;
+import com.oa.application.user.controller.OaCustomerController;
 import com.oa.application.user.controller.OaLocalUserController;
 import com.oa.application.user.controller.OaSupplierController;
 import com.oa.application.user.controller.OaUserController;
@@ -42,7 +44,9 @@ public class LogConstant {
         FILE_MODULE("文件模块", FileController.class),
         AREA_MODULE("地域模块", OaAreaController.class),
         ORDER_MODULE("订单模块", OaOrderController.class),
+        ORDER_GOODS_MODULE("订单单品关联模块", OaOrderGoodsRelationController.class),
         USER_MODULE("用户模块", OaUserController.class),
+        CUSTOM_MODULE("客户模块", OaCustomerController.class),
         SUPPLIER_MODULE("供应商模块", OaSupplierController.class),
         GOODS_MODULE("单品管理模块", GoodsController.class),
         ENUM_MODULE("字典管理模块", OaMenuController.class),
