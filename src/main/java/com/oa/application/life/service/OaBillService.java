@@ -22,4 +22,6 @@ public interface OaBillService extends IService<OaBill> {
      * @return 分页数据
      */
     Page<OaBillVo> getList(OaBillListDto oaBillListVo);
+
+    boolean update(OaBill oaBill);
 }

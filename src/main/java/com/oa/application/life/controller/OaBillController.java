@@ -29,7 +29,7 @@ public class OaBillController {
 
     @PostMapping("/update")
     public R update(@RequestBody OaBill oaBill) {
-        return R.success().data(oaBillService.updateById(oaBill));
+        return R.success().data(oaBillService.update(oaBill));
     }
 
     @PostMapping("/delete")
