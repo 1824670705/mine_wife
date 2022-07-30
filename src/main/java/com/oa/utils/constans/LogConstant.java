@@ -10,10 +10,7 @@ import com.oa.application.order.controller.OaOrderGoodsRelationController;
 import com.oa.application.order.controller.OaOrderReportController;
 import com.oa.application.other.controller.FileController;
 import com.oa.application.other.controller.OaAreaController;
-import com.oa.application.user.controller.OaCustomerController;
-import com.oa.application.user.controller.OaLocalUserController;
-import com.oa.application.user.controller.OaSupplierController;
-import com.oa.application.user.controller.OaUserController;
+import com.oa.application.user.controller.*;
 import lombok.Getter;
 
 public class LogConstant {
@@ -51,6 +48,7 @@ public class LogConstant {
         GOODS_MODULE("单品管理模块", GoodsController.class),
         ENUM_MODULE("字典管理模块", OaMenuController.class),
         LOCATION_MODULE("用户地址信息模块", OaLocalUserController.class),
+        ROLE_MODULE("角色模块", OaRoleController.class),
         REPORT_BILL_MODULE("报表-账单管理-模块", OaBillReportController.class),
         REPORT_ORDER_MODULE("报表-订单管理-模块", OaOrderReportController.class),
         ;

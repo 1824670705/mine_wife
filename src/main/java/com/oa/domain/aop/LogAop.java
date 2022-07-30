@@ -65,9 +65,15 @@ public class LogAop {
         logService.save(logBean);
     }
 
-    @AfterThrowing(pointcut = "pointCut()")
-    public void logAfterReturnThrow(JoinPoint joinPoint) {
-        log.error("发生异常{}", joinPoint.getTarget());
+    @AfterThrowing(pointcut = "pointCut()", throwing = "e")
+    public void logAfterReturnThrow(JoinPoint joinPoint, Exception e) {
+        JoinPointInfo loginUserInfo = getLoginUserInfo(joinPoint);
+        if (ObjectUtils.isEmpty(loginUserInfo)) {
+            log.error("发生异常并且不会保存日志到数据库中\t=>\t{}", e.getMessage());
+            return;
+        }
+        saveLog(loginUserInfo.getOaUserLoginResponseVo(), loginUserInfo.getMethodName(), loginUserInfo.getParams(), loginUserInfo.getTargetClass());
+        log.error("发生异常\t=>\t{}", e.getMessage());
     }
 
     /**
