@@ -39,9 +39,11 @@ public class LogAop {
     public void returnAfter(JoinPoint joinPoint) {
         JoinPointInfo loginUserInfo = getLoginUserInfo(joinPoint);
         if (ObjectUtils.isEmpty(loginUserInfo)) {
-            log.info("登录用户：{}\t访问方法：{}\tAmazonDateUtils请求参数：{}\t", userName, methodName, queryParams);
+            log.error("未知日志");
+        } else {
+            saveLog(loginUserInfo.getOaUserLoginResponseVo(), loginUserInfo.getMethodName(), loginUserInfo.getParams(), loginUserInfo.getTargetClass());
+            log.info("登录用户：{}\t访问方法：{}\tAmazonDateUtils请求参数：{}\t", loginUserInfo.getUsername(), loginUserInfo.getMethodName(), loginUserInfo.getParams());
         }
-        log.info("登录用户：{}\t访问方法：{}\tAmazonDateUtils请求参数：{}\t", userName, methodName, queryParams);
     }
 
     private void saveLog(OaUserLoginResponseVo loginResponseVo, String method, String params, Class<?> targetClass) {
@@ -53,8 +55,13 @@ public class LogAop {
                 break;
             }
         }
-        logBean.setLogOpUserName(loginResponseVo.getUsername()).setLogOpUserId(loginResponseVo.getUserId()).setLogContent(method + "=>" + params)
-                .setCreateBy(loginResponseVo.getUserId()).setLogType(LogConstant.LogTypeConstant.defaultType);
+        if (ObjectUtils.isEmpty(loginResponseVo)) {
+            logBean.setLogOpUserName("用户未登录").setLogOpUserId(0L).setLogContent(method + "=>" + params)
+                    .setCreateBy(0L).setLogType(LogConstant.LogTypeConstant.defaultType);
+        } else {
+            logBean.setLogOpUserName(loginResponseVo.getUsername()).setLogOpUserId(loginResponseVo.getUserId()).setLogContent(method + "=>" + params)
+                    .setCreateBy(loginResponseVo.getUserId()).setLogType(LogConstant.LogTypeConstant.defaultType);
+        }
         logService.save(logBean);
     }
 
@@ -94,6 +101,8 @@ public class LogAop {
         } else {
             Object principal = authentication.getPrincipal();
             userName = String.valueOf(principal);
+            OaUserLoginResponseVo loginResponseVo = TokenUtils.parseToken(String.valueOf(authentication.getCredentials()));
+            info.setOaUserLoginResponseVo(loginResponseVo);
         }
         info.setUsername(userName);
         return info;
