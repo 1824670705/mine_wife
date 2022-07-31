@@ -44,6 +44,11 @@ public class Log {
     private Integer logType;
 
     /**
+     * 日志类型名字
+     */
+    private String logTypeName;
+
+    /**
      * 创建者
      */
     private Long createBy;

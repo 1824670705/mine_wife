@@ -18,7 +18,7 @@ public class LogController {
     @Resource(name = "logService")
     private LogService logService;
 
-    @GetMapping("/getList")
+    @GetMapping("/list")
     public R getList(@Validated(Default.class) LogListDto logListDto) {
         return R.success().data(logService.getList(logListDto));
     }

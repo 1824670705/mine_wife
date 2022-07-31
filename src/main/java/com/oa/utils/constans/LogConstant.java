@@ -21,6 +21,7 @@ public class LogConstant {
          * 默认值，未知的类型
          */
         Integer defaultType = 0;
+        String defaultTypeName = "未知的类型";
         Integer deleteType = 1;
         Integer createType = 2;
         Integer updateType = 3;

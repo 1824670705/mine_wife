@@ -57,10 +57,10 @@ public class LogAop {
         }
         if (ObjectUtils.isEmpty(loginResponseVo)) {
             logBean.setLogOpUserName("用户未登录").setLogOpUserId(0L).setLogContent(method + "=>" + params)
-                    .setCreateBy(0L).setLogType(LogConstant.LogTypeConstant.defaultType);
+                    .setCreateBy(0L).setLogType(LogConstant.LogTypeConstant.defaultType).setLogTypeName(LogConstant.LogTypeConstant.defaultTypeName);
         } else {
             logBean.setLogOpUserName(loginResponseVo.getUsername()).setLogOpUserId(loginResponseVo.getUserId()).setLogContent(method + "=>" + params)
-                    .setCreateBy(loginResponseVo.getUserId()).setLogType(LogConstant.LogTypeConstant.defaultType);
+                    .setCreateBy(loginResponseVo.getUserId()).setLogType(LogConstant.LogTypeConstant.defaultType).setLogTypeName(LogConstant.LogTypeConstant.defaultTypeName);
         }
         logService.save(logBean);
     }
