@@ -46,7 +46,7 @@ public class OaSpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().formLogin().loginPage("/user/login").usernameParameter("username").passwordParameter("password").permitAll()
                 .and().logout().logoutUrl("/user/loginOut").addLogoutHandler(loginLogOutHandler)
                 // 配置不需要授权的接口
-                .and().authorizeRequests().antMatchers("/public/**").permitAll()
+                .and().authorizeRequests().antMatchers("/public/**", "/file/upload").permitAll()
                 .anyRequest().authenticated();
         http.addFilterAt(new LoginUsernamePasswordFilter(authenticationManager(), oaRedisTemplate), UsernamePasswordAuthenticationFilter.class)
                 .addFilter(new LoginAuthFilterHandler(authenticationManager(), oaRedisTemplate));
@@ -59,7 +59,7 @@ public class OaSpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**").antMatchers("/public/**");
+        web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**").antMatchers("/public/**", "/file/upload");
     }
 
     @Bean
