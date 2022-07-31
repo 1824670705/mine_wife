@@ -1,14 +1,11 @@
 package com.oa.application.user.controller;
 
-import javax.annotation.Resource;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import com.oa.application.user.entity.bo.OaLocalUser;
 import com.oa.application.user.service.OaLocalUserService;
 import com.oa.utils.result.R;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
 
 /**
  * 用户地址列表
@@ -20,13 +17,13 @@ public class OaLocalUserController {
     @Resource
     private OaLocalUserService oaLocalUserService;
 
-    @GetMapping("/getListByUserId")
-    public R getListByUserId(Long ownerId) {
-        return R.success().data(oaLocalUserService.getListByUserId(ownerId));
+    @GetMapping("/list")
+    public R getListByUserId() {
+        return R.success().data(oaLocalUserService.getListByUserId());
     }
 
     @PostMapping("/save")
-    public R saveLocalByUserId() {
-        return R.success();
+    public R saveLocalByUserId(@RequestBody OaLocalUser oaLocalUser) {
+        return R.success().data(oaLocalUserService.save(oaLocalUser));
     }
 }
