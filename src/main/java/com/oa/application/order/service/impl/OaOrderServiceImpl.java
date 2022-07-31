@@ -11,6 +11,7 @@ import com.oa.application.order.entity.vo.OrderResponseVo;
 import com.oa.application.order.service.IOaOrderService;
 import com.oa.application.order.service.OaOrderGoodsRelationService;
 import com.oa.domain.mapper.OaOrderMapper;
+import com.oa.utils.convert.DoubleFormat;
 import com.oa.utils.other.LoginUserInfoUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -60,7 +61,7 @@ public class OaOrderServiceImpl extends ServiceImpl<OaOrderMapper, OaOrder> impl
         // 成本价格
         Double cost = oaOrderSaveVo.getShops().stream().map(OaOrderGoodsRelationDto::getCostPrice).reduce(Double::sum).orElse(0.00);
         // 利润
-        Double profit = Double.parseDouble(oaOrder.getOrdPrice()) - cost;
+        Double profit = DoubleFormat.formatDouble(Double.parseDouble(oaOrder.getOrdPrice()) - cost);
         oaOrder.setOrdCost(String.valueOf(cost)).setOrdProfit(String.valueOf(profit));
         Optional.ofNullable(oaOrder.getExpressId()).orElseGet(() -> {
             oaOrder.setExpressId(0L);
@@ -84,7 +85,7 @@ public class OaOrderServiceImpl extends ServiceImpl<OaOrderMapper, OaOrder> impl
             // 成本价格
             Double cost = oaOrderUpdateVo.getShops().stream().map(OaOrderGoodsRelationDto::getCostPrice).reduce(Double::sum).orElse(0.00);
             // 利润
-            Double profit = Double.parseDouble(oaOrderUpdateVo.getOrdPrice()) - cost;
+            Double profit = DoubleFormat.formatDouble(Double.parseDouble(oaOrderUpdateVo.getOrdPrice()) - cost);
             oaOrder.setOrdCost(String.valueOf(cost)).setOrdProfit(String.valueOf(profit));
         });
         BeanUtils.copyProperties(oaOrderUpdateVo, oaOrder);
